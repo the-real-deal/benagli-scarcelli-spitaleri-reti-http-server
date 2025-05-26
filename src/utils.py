@@ -1,4 +1,4 @@
-import json
+import pprint
 from typing import TypeVar
 
 
@@ -7,7 +7,7 @@ def address_string(addr: tuple[str, int]) -> str:
 
 
 def object_str(obj: object) -> str:
-    return json.dumps(obj, indent=2)
+    return pprint.pformat(obj, indent=2, compact=False)
 
 
 _T = TypeVar("_T")

@@ -5,7 +5,7 @@ import sys
 from http import HTTPMethod, HTTPStatus
 from os import path
 from pathlib import Path
-from config import HOST, HTTP_VERSION, N_CONNECTIONS, PORT, WEB_ROOT
+from config import ENCODING, HOST, HTTP_VERSION, N_CONNECTIONS, PORT, WEB_ROOT
 from src import utils
 from src.connection import ConnectionManager
 from src.server import HTTPClient, HTTPResponse
@@ -46,7 +46,7 @@ def send_page(req_path: str, http_client: HTTPClient, status=HTTPStatus.OK):
         raise FileNotFoundError()
 
     mymetype, _ = mimetypes.guess_type(page_path)
-    with open(page_path, "r") as page:
+    with open(page_path, "rb") as page:
         http_client.send_res(
             HTTPResponse(
                 status=status,
@@ -105,13 +105,15 @@ def main():
                     send_page(req.path, http_client)
             except FileNotFoundError:
                 http_client.send_res(
-                    HTTPResponse(status=HTTPStatus.NOT_FOUND, body="Not found")
+                    HTTPResponse(
+                        status=HTTPStatus.NOT_FOUND, body="Not found".encode(ENCODING)
+                    )
                 )
             except Exception as e:
                 http_client.send_res(
                     HTTPResponse(
                         status=HTTPStatus.INTERNAL_SERVER_ERROR,
-                        body=str(e),
+                        body=str(e).encode(ENCODING),
                     )
                 )
             finally:
