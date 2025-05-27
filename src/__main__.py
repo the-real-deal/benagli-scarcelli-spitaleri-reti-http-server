@@ -45,13 +45,13 @@ def send_page(req_path: str, http_client: HTTPClient, status=HTTPStatus.OK):
     if not page_path.exists():
         raise FileNotFoundError()
 
-    mymetype, _ = mimetypes.guess_type(page_path)
+    mimetype, _ = mimetypes.guess_file_type(page_path)
     with open(page_path, "rb") as page:
         http_client.send_res(
             HTTPResponse(
                 status=status,
                 body=page.read(),
-                mymetype=mymetype,
+                mimetype=mimetype,
             )
         )
 

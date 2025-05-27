@@ -1,6 +1,7 @@
 from dataclasses import asdict, dataclass, field
 from http import HTTPMethod, HTTPStatus
 import logging
+import mimetypes
 
 from config import ENCODING, HTTP_VERSION
 from src import utils
@@ -9,6 +10,15 @@ from src.connection import ConnectionManager
 log = logging.getLogger()
 
 HTTP_NEWLINE = "\r\n"
+
+TEXT_MIMETYPES = [
+    "text/",
+    "application/json",
+    "application/javascript",
+    "application/xml",
+    "application/ld+json",
+    "application/yaml",
+]
 
 
 @dataclass
@@ -26,7 +36,11 @@ class HTTPResponse:
     http_version: str | None = None
     headers: dict[str, str] | None = None
     body: bytes | None = None
-    mymetype: str | None = None
+    mimetype: str | None = None
+
+
+def is_text(mimetype: str) -> bool:
+    return any(mimetype.startswith(mime) for mime in TEXT_MIMETYPES)
 
 
 class HTTPClient:
@@ -63,13 +77,13 @@ class HTTPClient:
     def send_res(self, res: HTTPResponse):
         res.http_version = utils.get_or(res.http_version, HTTP_VERSION)
         res.headers = utils.get_or(res.headers, {})
-        res.mymetype = utils.get_or(res.mymetype, "text/plain")
+        res.mimetype = utils.get_or(res.mimetype, "text/plain")
 
         log.info(f"Response: {utils.object_str(asdict(res))}")
         data = f"{res.http_version.upper()} {res.status.value} {res.status.phrase}{HTTP_NEWLINE}"
         if res.body is not None:
             res.headers["Content-Type"] = (
-                f"{res.mymetype}{f"; charset={ENCODING}" if res.mymetype.startswith("text") else ""}"
+                f"{res.mimetype}{f"; charset={ENCODING}" if is_text(res.mimetype) else ""}"
             )
             res.headers["Content-Length"] = len(res.body)
         for key, val in res.headers.items():
