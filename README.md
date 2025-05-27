@@ -1,4 +1,6 @@
-# Realizzazione di un Web Server minimale in Python e pubblicazione di un sito statico
+# Traccia 1 – Web Server + Sito Web Statico (livello base/intermedio)
+
+**Realizzazione di un Web Server minimale in Python e pubblicazione di un sito statico**
 
 ## Obiettivo
 
