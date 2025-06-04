@@ -81,7 +81,7 @@ def main():
     try:
         server_socket.bind(server_address)
         server_socket.listen(N_CONNECTIONS)
-        log.info(f"Socket listening on {utils.address_string(server_address)}")
+        log.info(f"Socket listening on http://{utils.address_string(server_address)}")
 
         while True:
             conn, addr = server_socket.accept()
