@@ -1,4 +1,4 @@
-# Relazione Tecnica: Web Server HTTP minimale in Python
+# Relazione Tecnica Traccia 1: Web Server + Sito Web Statico (livello base/intermedio)
 
 ## Introduzione
 
